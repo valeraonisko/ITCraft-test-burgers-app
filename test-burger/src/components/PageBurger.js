@@ -1,8 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as actionCreators from '../redux/actions';
+
+import { selectIsError, selectIsMenuLoaded } from '../redux/selectors';
 import BurgerItem from './BurgerItem';
+import { clickApplyBurger, clickCancelBurger} from '../redux/actions';
 
 export class PageBurger extends React.Component {
 
@@ -21,17 +22,15 @@ export class PageBurger extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    isMenuLoaded: state.isMenuLoaded,
-    isError: state.isError,
-    isMenuLoaded: state.isMenuLoaded,
-    requestError: state.requestError,
-    burgerSelected: state.burgerSelected
+  isError: selectIsError(state),
+  isMenuLoaded: selectIsMenuLoaded(state),
+  requestError: state.data.requestError,
+  burgerSelected: state.data.burgerSelected
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions : bindActionCreators(actionCreators, dispatch)
-  // clickApplyBurger: () => dispatch(clickApplyBurger()),
-  // clickCancelBurger: () => dispatch(clickCancelBurger())
+  clickApplyBurger: () => dispatch(clickApplyBurger()),
+  clickCancelBurger: () => dispatch(clickCancelBurger())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageBurger);

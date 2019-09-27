@@ -1,8 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as actionCreators from '../redux/actions';
+
 import BurgerOrder from './BurgerOrder';
+import { selectBurgerOrder } from '../redux/selectors';
+import { clickNewBurger, clickFinishOrder } from '../redux/actions';
 
 export class PageOrder extends React.Component {
   render () {
@@ -13,13 +14,12 @@ export class PageOrder extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    burgerOrder: state.burgerOrder
+    burgerOrder: selectBurgerOrder(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions : bindActionCreators(actionCreators, dispatch)
-  // clickNewBurger: () => dispatch(clickNewBurger()),
-  // clickFinishOrder: () => dispatch(clickFinishOrder())
+  clickNewBurger: () => dispatch(clickNewBurger()),
+  clickFinishOrder: () => dispatch(clickFinishOrder())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageOrder);

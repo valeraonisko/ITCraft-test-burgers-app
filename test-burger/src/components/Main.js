@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Route } from 'redux-router';
-import { Row } from 'reactstrap';
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import './Main.css';
 
-import {requireAuth} from './Auth';
+import {requireAuth} from './AuthComp';
 import Header from './Header';
 import Footer from './Footer';
 import PageMenu from './PageMenu';
 import PageOrder from './PageOrder';
 import PageBurger from './PageBurger';
 import Login from './Login';
+import Logout from './Logout';
 
 export default class Main extends Component {
   componentDidMount() {
@@ -17,16 +17,25 @@ export default class Main extends Component {
   }
 
   render () {
+    const { redirect, burgerSelected, userName, dropRedirect } = this.props;
+    if (redirect) {
+      console.log("redirect", redirect);
+      dropRedirect();
+      return (<Router><Redirect to={redirect}/></Router>);
+    }
+
     return (
-      <Route path="/" component={Header}>
+      <Router>
+        <Header burgerSelected={burgerSelected} userName={userName}/>
         <main>
-          <Route path="login" component={Login}/>
-          <Route path="menu" component={requireAuth(PageMenu)}/>
-          <Route path="burger" component={requireAuth(PageBurger)}/>
-          <Route path="order" component={requireAuth(PageOrder)}/>
+          <Route exact path="/" component={requireAuth(PageMenu)}/>
+          <Route path="/login" component={Login}/>
+          <Route path="/logout" component={Logout}/>
+          <Route path="/burger" component={requireAuth(PageBurger)}/>
+          <Route path="/order" component={requireAuth(PageOrder)}/>
         </main>
         <Footer />
-      </Route>
+      </Router>
     );
   }
 

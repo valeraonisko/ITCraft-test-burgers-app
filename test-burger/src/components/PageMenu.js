@@ -1,9 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as actionCreators from '../redux/actions';
-import MenuItem from './MenuItem';
 import { Row } from 'reactstrap';
+
+import MenuItem from './MenuItem';
+import { selectIsError, selectIsMenuLoaded, selectMenuMap } from '../redux/selectors';
+import { clickBurger } from '../redux/actions';
+
 
 export class PageMenu extends React.Component {
 
@@ -20,15 +22,14 @@ export class PageMenu extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    menuMap: state.menuMap,
-    isError: state.isError,
-    isMenuLoaded: state.isMenuLoaded,
-    requestError: state.requestError
+  isError: selectIsError(state),
+  isMenuLoaded: selectIsMenuLoaded(state),
+  menuMap: selectMenuMap(state),
+  requestError: state.data.requestError
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions : bindActionCreators(actionCreators, dispatch)
-  // clickBurger: (id) => dispatch(clickBurger(id))
+  clickBurger: (id) => dispatch(clickBurger(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageMenu);

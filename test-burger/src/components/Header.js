@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
 import { Navbar, NavbarBrand, Nav, NavItem } from 'reactstrap';
 
 export default class Header extends Component {
 
   render () {
-    const { burgerSelected } = this.props;
+    const { burgerSelected, userName } = this.props;
 
-    const menuItem = (<NavLink exact to="/" className="nav-link" activeClassName="active">Burger menu</NavLink>);
+    const menuItem = (<NavLink to="/" className="nav-link" activeClassName="active">Burger menu</NavLink>);
 
     const burgerItem = burgerSelected ?
-       (<NavLink exact to="/burger" className="nav-link" activeClassName="active">{burgerSelected.title}</NavLink>) : null;
+       (<NavLink to="/burger" className="nav-link" activeClassName="active">{burgerSelected.title}</NavLink>) : null;
     const burgerNavItem = burgerSelected ? (<NavItem>{burgerItem}</NavItem>) : null;
 
-    const orderItem = (<NavLink exact to="/order" className="nav-link" activeClassName="active">Order</NavLink>);
+    const orderItem = (<NavLink to="/order" className="nav-link" activeClassName="active">Order</NavLink>);
+    const userItem = (<NavLink to="/logout" className="nav-link" activeClassName="active">{userName}</NavLink>);
 
     return (
       <header className="main-header">
@@ -28,6 +29,12 @@ export default class Header extends Component {
               {orderItem}
             </NavItem>
           </Nav>
+          <Nav navbar right="true">
+            <NavItem>
+              {userItem}
+            </NavItem>
+          </Nav>
+
         </Navbar>
       </header>
     );

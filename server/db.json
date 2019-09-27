@@ -3,59 +3,36 @@
     {
       "id": 1,
       "title": "Big Mac",
-      "img": "thumb.Sdwch_BigMac.png",
-      "opts" : [
-          {
-            "code": "1-1",
-            "title": "Salsa",
-            "defqt": 1,
-            "maxqt": 5
-          },
-          {
-            "code": "1-2",
-            "title": "Bacon",
-            "defqt": 1,
-            "maxqt": 2
-          }
-      ]
+      "img": "thumb.Sdwch_BigMac.png"
+
     },
     {
       "id": 2,
       "title": "Big Tasty",
-      "img": "thumb.Sdwch_BigTasty.png",
-      "opts" : [
-          {
-            "code": "2-1",
-            "title": "Salsa",
-            "defqt": 1,
-            "maxqt": 5
-          },
-          {
-            "code": "2-2",
-            "title": "Bacon",
-            "defqt": 1,
-            "maxqt": 2
-          }
-      ]
+      "img": "thumb.Sdwch_BigTasty.png"
+
     },
     {
       "id": 3,
       "title": "Big Double Cheeseburger",
-      "img": "thumb.Sdwch_DoubleCheeseburger.png",
-      "opts" : [
-          {
-            "code": "3-1",
-            "title": "Salsa",
-            "defqt": 1,
-            "maxqt": 5
-          },
-          {
-            "code": "3-2",
-            "title": "Cheese",
-            "defqt": 1,
-            "maxqt": 2
-          }
-      ]
+      "img": "thumb.Sdwch_DoubleCheeseburger.png"
+
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "email": "test@com",
+      "userName": "User1",
+      "password": "112233",
+      "token": "m324324vddlfdgfdgdfskfhi"
+    },
+    {
+      "id": 2,
+      "email": "test2@com",
+      "userName": "User2",
+      "password": "12345",
+      "token": "m324324vddlfdgfdgdfskfhi"
     }
   ]
 }

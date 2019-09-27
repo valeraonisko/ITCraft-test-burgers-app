@@ -1,10 +1,6 @@
 import { checkHttpStatus, parseJSON } from './utils';
-import { pushState } from 'redux-router';
-import jwtDecode from 'jwt-decode';
-import {LOGIN_USER_REQUEST,
-  // LOGIN_USER_FAILURE,
-  LOGIN_USER_SUCCESS, LOGOUT_USER, FETCH_PROTECTED_DATA_REQUEST,
-  RECEIVE_PROTECTED_DATA} from './constants';
+// import jwtDecode from 'jwt-decode';
+import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER} from './constants';
 
 export const MENU_LOAD = 'menu_load';
 export const MENU_ERROR = 'menu_error';
@@ -22,6 +18,8 @@ export const CLICK_DEC_OPTION = 'click_dec_option';
 
 export const CLICK_NEW_BURGER = 'click_new_burger';
 export const CLICK_FINISH_ORDER = 'click_finish_order';
+
+export const SET_REDIRECT = 'set_redirect';
 
 
 const serverUrl = 'http://localhost:3001';
@@ -117,31 +115,37 @@ export function clickFinishOrder() {
   };
 }
 
+export function setRedirect(redirect) {
+  return {
+    type: SET_REDIRECT,
+    payload: redirect
+  };
+
+}
+
 export function loginUser(email, password, redirect="/") {
+    // console.log("loginUser");
     return function(dispatch) {
         dispatch(loginUserRequest());
-        return fetch('http://localhost:3000/auth/getToken/', {
-            method: 'post',
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-                body: JSON.stringify({email: email, password: password})
-            })
+        return fetch(`${serverUrl}/users`)
             .then(checkHttpStatus)
             .then(parseJSON)
-            .then(response => {
+            .then(users => {
                 try {
-                    let decoded = jwtDecode(response.token);
-                    dispatch(loginUserSuccess(response.token));
-                    dispatch(pushState(null, redirect));
-                } catch (e) {
+                    // console.log(users);
+                    const user = users.find(u => u.email === email);
+                    // console.log(user);
+                    if (user === null) {
+                        throw new Error("wrong email");
+                    }
+                    dispatch(loginUserSuccess(user));
+                    dispatch(setRedirect(redirect));
+                } catch (error) {
                     dispatch(loginUserFailure({
-                        response: {
-                            status: 403,
-                            statusText: 'Invalid token'
-                        }
+                      response: {
+                        status: 404,
+                        statusText: error
+                          }
                     }));
                 }
             })
@@ -153,21 +157,26 @@ export function loginUser(email, password, redirect="/") {
 
 export function loginUserFailure(error) {
   localStorage.removeItem('token');
+  const status = error.response? error.response.status: "404";
+  const text = error.response? error.response.statusText: error;
   return {
     type: LOGIN_USER_FAILURE,
     payload: {
-      status: error.response.status,
-      statusText: error.response.statusText
+      status: status,
+      statusText: text
     }
   }
 }
 
-export function loginUserSuccess(token) {
-  localStorage.setItem('token', token);
+export function loginUserSuccess(user) {
+  localStorage.setItem('token', user.token);
+  localStorage.setItem('userName', user.userName);
+  // console.log("login success", user);
   return {
     type: LOGIN_USER_SUCCESS,
     payload: {
-      token: token
+      token: user.token,
+      userName: user.userName
     }
   }
 }
@@ -176,4 +185,11 @@ export function loginUserRequest() {
   return {
     type: LOGIN_USER_REQUEST
   }
+}
+
+export function logoutUser() {
+    localStorage.removeItem('token');
+    return {
+        type: LOGOUT_USER
+    }
 }

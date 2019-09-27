@@ -1,63 +1,68 @@
-import React from 'react/addons';
-import { bindActionCreators } from 'redux';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import reactMixin from 'react-mixin';
-import * as actionCreators from '../redux/actions';
+import queryString from 'query-string';
 
-export class Login extends React.Component {
+import { loginUser } from '../redux/actions';
 
+
+export class Login extends Component {
   constructor(props) {
     super(props);
-    const redirectRoute = this.props.location.query.next || '/login';
+    const values = queryString.parse(this.props.location.search);
+    // console.log(values);
+    const redirectRoute = values.next || '/login';
     this.state = {
-      email: '',
-      password: '',
+      email: 'test@com',
+      password: '12345',
       redirectTo: redirectRoute
     };
+
+    this.loginClick.bind(this);
   }
 
-  login(e) {
-      e.preventDefault();
-      this.props.actions.loginUser(this.state.email, this.state.password, this.state.redirectTo);
+  loginClick(e) {
+    e.preventDefault();
+    this.props.loginUser(this.state.email, this.state.password, this.state.redirectTo);
   }
 
-  render () {
+  render() {
+    const { email, password } = this.props;
     return (
       <div className='col-xs-12 col-md-6 col-md-offset-3'>
         <h3>Log in to view burger menu!</h3>
         {this.props.statusText ? <div className='alert alert-info'>{this.props.statusText}</div> : ''}
-        <form role='form'>
+        <form>
         <div className='form-group'>
             <input type='text'
               className='form-control input-lg'
-              valueLink={this.linkState('email')}
+              defaultValue={email}
               placeholder='Email' />
             </div>
           <div className='form-group'>
             <input type='password'
               className='form-control input-lg'
-              valueLink={this.linkState('password')}
+              defaultValue={password}
               placeholder='Password no less 8 symbols' />
           </div>
           <button type='submit'
             className='btn btn-lg'
             disabled={this.props.isAuthenticating}
-            onClick={this.login.bind(this)}>Submit</button>
+            onClick={(e) => this.loginClick(e)} >Submit</button>
       </form>
     </div>
     );
   }
 }
 
-reactMixin(Login.prototype, React.addons.LinkedStateMixin);
-
 const mapStateToProps = (state) => ({
+  email   : state.auth.email,
+  password  : state.auth.password,
   isAuthenticating   : state.auth.isAuthenticating,
   statusText         : state.auth.statusText
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions : bindActionCreators(actionCreators, dispatch)
+  loginUser: (email, password, redirect) => dispatch(loginUser(email, password, redirect))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

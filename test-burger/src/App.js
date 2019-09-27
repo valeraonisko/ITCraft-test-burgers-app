@@ -1,12 +1,19 @@
 import React from 'react';
 import './App.css';
-import {applyMiddleware, createStore} from 'redux';
 import {Provider} from "react-redux";
-import {getNextState} from "./redux/reducers";
+import configureStore from './store/configureStore';
 import MainHandler from "./components/MainHandler";
-import thunk from "redux-thunk";
 
-const store = createStore(getNextState, applyMiddleware(thunk));
+import {loginUserSuccess} from './redux/actions';
+
+
+const store = configureStore(window.__INITIAL_STATE__);
+
+let token = localStorage.getItem('token');
+if (token !== null) {
+    let userName = localStorage.getItem('userName');
+    store.dispatch(loginUserSuccess({userName: userName, token: token}));
+}
 
 function App() {
   return (
